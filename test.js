@@ -1,7 +1,7 @@
 
 // let TWEEN = Panolens.TWEEN;
 // let PANOLENS = Panolens.PANOLENS;
-const panorama = new PANOLENS.ImagePanorama('/img3D/congtruong.jpg');
+const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
 panolensViewer = document.querySelector('#panolens-viewer');
 viewer = new PANOLENS.Viewer({ 
     container: panolensViewer,        // A DOM Element container
