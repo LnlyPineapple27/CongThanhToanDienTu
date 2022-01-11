@@ -4,24 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no">
     <title>Testing</title>
-    <style rel="stylesheet" href="style.css"></style>
+    <link rel="stylesheet" href="style.css">
     
     
     
 </head>
 
 <body>
-    <div class="credit">Test 3D View CongThanhToan HCMUS voi thu vien <a href="https://github.com/pchen66/panolens.js">Panolens.js</a></div>
-    <script src="js/lib/three.min.js"></script>
-    <script src="js/lib/panolens.min.js"></script>
-    <script>
-
-        const panorama = new PANOLENS.ImagePanorama( 'img3D/congtruong.jpg' );
-        const viewer = new PANOLENS.Viewer(  );
-        viewer.add( panorama );
-  
-      </script>
-    <script src="test.js"></script>
+    <div id="panolens-viewer">
+        	
+        <div class="credit">Test 3D View CongThanhToan HCMUS voi thu vien <a href="https://github.com/pchen66/panolens.js">Panolens.js</a></div>
+        <script src="js/lib/three.min.js"></script>
+        <script src="js/lib/panolens.min.js"></script>
+        <script src="test.js"></script>
+    </div>
     
+
+
 </body>
 </html>
