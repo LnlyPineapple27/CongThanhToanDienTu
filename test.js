@@ -1,7 +1,14 @@
 
 // let TWEEN = Panolens.TWEEN;
 // let PANOLENS = Panolens.PANOLENS;
-var pos1,pos2,pos3;
+var pos1,pos2,pos3,parameters;
+parameters = {
+    amount: 50,
+    duration: 1000,
+    curve: 'Exponential',
+    easing: 'Out',
+    iterative: false
+  };
 const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
 panolensViewer = document.querySelector('#panolens-viewer');
 pos1= new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg'); 
@@ -10,7 +17,7 @@ infospot = new PANOLENS.Infospot(350,PANOLENS.DataImage.Info);
 // pos1_vector = new THREE.Vector3(3785.53, 669.68, -5000.00);
 infospot.position.set(3785.53, 669.68, -5000.00);
 infospot.addHoverText('Sanh I');
-infospot.addEventListener('click',onfocus);
+infospot.addEventListener('click',onFocus);
 panorama.add(infospot);
 viewer = new PANOLENS.Viewer({ 
     container: panolensViewer,        // A DOM Element container
@@ -30,3 +37,8 @@ viewer = new PANOLENS.Viewer({
  });
 viewer.add(panorama);
 
+function onFocus () {
+
+    this.focus( parameters.duration, TWEEN.Easing[ parameters.curve ][ parameters.easing ] );
+
+  }
