@@ -1,8 +1,17 @@
 
 // let TWEEN = Panolens.TWEEN;
 // let PANOLENS = Panolens.PANOLENS;
+var pos1,pos2,pos3;
 const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
 panolensViewer = document.querySelector('#panolens-viewer');
+pos1= new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg'); 
+
+infospot = new PANOLENS.Infospot(350,PANOLENS.DataImage.Info);
+// pos1_vector = new THREE.Vector3(3785.53, 669.68, -5000.00);
+infospot.position.set(3785.53, 669.68, -5000.00);
+infospot.addHoverText('Sanh I');
+infospot.addEventListener('click',onfocus);
+panorama.add(infospot);
 viewer = new PANOLENS.Viewer({ 
     container: panolensViewer,        // A DOM Element container
         // controlBar: true,             // Vsibility of bottom control bar
@@ -20,3 +29,4 @@ viewer = new PANOLENS.Viewer({
         output: 'console'            // Whether and where to output infospot position. Could be 'console' or 'overlay'
  });
 viewer.add(panorama);
+
