@@ -1,6 +1,26 @@
 
-// let TWEEN = Panolens.TWEEN;
-// let PANOLENS = Panolens.PANOLENS;
+//Change default icon
+PANOLENS.DataImageSource = "https://pchen66.github.io/Panolens/asset/icon/",
+    PANOLENS.DataImage = {
+        Info: PANOLENS.DataImageSource + "information.png",
+        Arrow: PANOLENS.DataImageSource + "arrow-up.png",
+
+        /* change default icons */
+        FullscreenEnter: "https://bnr.bluecactus.ro/360/css/ico/fs.png",
+        FullscreenLeave: "https://bnr.bluecactus.ro/360/css/ico/fs-out.png",
+        /* end */
+
+        VideoPlay: PANOLENS.DataImageSource + "video-play.png",
+        VideoPause: PANOLENS.DataImageSource + "pause.png",
+        WhiteTile: PANOLENS.DataImageSource + "tiles.png",
+        ReticleIdle: PANOLENS.DataImageSource + "reticle-idle.png",
+        Setting: PANOLENS.DataImageSource + "setting.png",
+        ChevronRight: PANOLENS.DataImageSource + "chevron-right.png",
+        Check: PANOLENS.DataImageSource + "check.png",
+        ViewIndicator: PANOLENS.DataImageSource + "view-indicator.svg",
+        ReticleDwell: PANOLENS.DataImageSource + "reticle-animation.png"
+    }
+//end change default icon
 var parameters;
 parameters = {
     amount: 3,
@@ -10,6 +30,11 @@ parameters = {
     iterative: false
   };
 
+  panolensViewer = document.querySelector('#panolens-viewer');
+  panel = document.querySelector('#panel')
+  panel_Info = document.querySelector('#panel_1')
+  
+  let container = document.querySelector('#testContainer')
   var pointList = [
     new THREE.Vector3(2975.80, 562.94, 3969.47),
     new THREE.Vector3(-3872.70, -331.51, 3131.14),
@@ -18,14 +43,74 @@ parameters = {
     new THREE.Vector3(368.76, -301.46, 4968.83),
     new THREE.Vector3(-4723.54, -27.88, 1624.72)];
 
-var imgPanel = document.getElementById("panel").src;
+function onEnter(event) {
+  panolensViewer.style.width = 0;
+  panolensViewer.classList.remove('finish');
+  $("#map a").css('pointer-events', 'none');
+}
+function onProgress(event) {
+  progress = event.progress.loaded / event.progress.total * 100;
+  panolensViewer.style.width = progress + '%';
+  $("canvas").css('opacity', 0.6);
+  if(progress === 100) {
+    panolensViewer.classList.add('finish');
+    $('#intro-msg').fadeOut(1000);
+    $("canvas").animate({
+      opacity: 1
+    });
+  }
+}
+function onLoad(event) {
+  $("canvas").css('opacity', 1);
+  $("#map a").css('pointer-events', 'auto');
+}
+function onLeave(event) {
+  if(is_touch_device()) $("#map").fadeOut(750);
+  setTimeout(function() {
+    $("#map a").css('pointer-events', 'auto');
+  }, 800);
+}
+    
 const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
+panorama.addEventListener('progress', onProgress);
+panorama.addEventListener('leave', onLeave);
+panorama.addEventListener('enter', onEnter);
+panorama.addEventListener('load', function() {
+  onLoad();
+  viewer.tweenControlCenter(new THREE.Vector3(-4964.25, 504.41, -134.84), 0); // Initialize view
+  $('#panolens-viewer').after('<div id="secondary"><span class="item zoom-out"><i class="fa fa-search-minus" aria-hidden="true"></i></span><span class="item zoom-in"><i class="fa fa-search-plus" aria-hidden="true"></i></span><span class="item arrow-right"><i class="fa fa-angle-right" aria-hidden="true"></i></span><span class="item arrow-up"><i class="fa fa-angle-up" aria-hidden="true"></i></span><span class="item arrow-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span><span class="item arrow-left"><i class="fa fa-angle-left" aria-hidden="true"></i></span></div>');
+  $('#secondary .zoom-in').on('click touchstart', function() {
+    var currentZoom = viewer.camera.fov;
+    var newZoom = currentZoom - 10;
+    if(newZoom < 30) newZoom = 30;
+    viewer.setCameraFov(newZoom);
+  });
+  $('#secondary .zoom-out').on('click touchstart', function() {
+    var currentZoom = viewer.camera.fov;
+    var newZoom = currentZoom + 10;
+    if(newZoom > 110) newZoom = 110;
+    viewer.setCameraFov(newZoom);
+  });
+  $('#secondary .arrow-left').on('click touchstart', function() {
+  	RotateLeftRight(1);
+  });
+  $('#secondary .arrow-right').on('click touchstart', function() {
+    RotateLeftRight(0);
+  });
+  $('#secondary .arrow-up').on('click touchstart', function() {
+    rotateUpDown(1);
+  });
+  $('#secondary .arrow-down').on('click touchstart', function() {
+  	rotateUpDown(0);
+    viewer.OrbitControls.rotateUp(0.1);
+  });
+  setTimeout(function() {
+    $('#intro-msg h1, #intro-msg h2').remove();
+    $('#intro-msg img').css('max-width', '50px').css('max-height', '50px').css('margin', '0').css('cursor', 'pointer');
+    $('#intro-msg').css('width', '50px').css('padding', '0').css('top', '10px').css('left', '10px').css('text-align', 'left').css('transform', 'none').fadeIn();
+    }, 1000);
+});
 
-panolensViewer = document.querySelector('#panolens-viewer');
-panel = document.querySelector('#panel')
-panel_Info = document.querySelector('#panel_1')
-
-let container = document.querySelector('#testContainer')
 
 var locationList =[
   new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg'),  // 0
@@ -119,7 +204,7 @@ viewer = new PANOLENS.Viewer({
         // autoReticleSelect: true,        // Auto select a clickable target after dwellTime
         // viewIndicator: false,            // Adds an angle view indicator in upper left corner
         // indicatorSize: 30,            // Size of View Indicator
-        autoRotate: true, autoRotateSpeed: 0.2, autoRotateActivationDuration: 2000,
+        autoRotate: false, autoRotateSpeed: 0.2, autoRotateActivationDuration: 2000,
         reverseDragging: false,
         controlButtons: [
           'fullscreen'
@@ -133,20 +218,79 @@ viewer.getCamera().updateProjectionMatrix();
 
 viewer.add(panorama, locationList[0], locationList[1], locationList[2]);
 //panorama.link(pos1, pos1_vector );
-viewer.renderer.sortObjects = true;
+// viewer.renderer.sortObjects = true;
 function onFocus () {
 
     this.focus( parameters.duration, TWEEN.Easing[ parameters.curve ][ parameters.easing ] );
 
   }
-var stoprotate=false;    
-$(document).click(function(){ 
-stoprotate=true; setTimeout(function(){  stoprotate=false; }, 3000);
-  });  
-viewer.addUpdateCallback(function() {      
-if(!stoprotate){
-viewer.panorama.rotation.y -= 0.001;
-}        
-});
+// var controlIndex = PANOLENS.Controls.ORBIT;
+var controlSensor = {
+  style: {
+    backgroundImage: 'url(img/icon/sensor.png)'
+  },
+  onTap: function() {
+    controlIndex = controlIndex >= 1 ? 0 : controlIndex + 1;
+    switch (controlIndex) {
+      case 0: viewer.enableControl(PANOLENS.Controls.ORBIT); break;
+      case 1: viewer.enableControl(PANOLENS.Controls.DEVICEORIENTATION); break;
+      default: break;
+    }
+  }
+};
+var controlRotate = {
+  style: {
+    backgroundImage: 'url(img/icon/rotate.png)'
+  },
+  onTap: function() {
+    var state = viewer.getControl().autoRotate;
+    viewer.getControl().autoRotate = !state;
+  }
+};
+var controlMap = {
+  style: {
+    backgroundImage: 'url(img/icon/map.png)'
+  },
+  onTap: function() {
+    $("#map").toggle();
+  }
+};
+var controlExtras = {
+  style: {
+    backgroundImage: 'url(img/icon/extras.png)'
+  },
+  onTap: function() {
+    $("#secondary").toggle(400);
+  }
+};
+viewer.appendControlItem(controlSensor);
+viewer.appendControlItem(controlRotate);
+viewer.appendControlItem(controlMap);
+viewer.appendControlItem(controlExtras);
 
-
+var ROTATION_POSITION = 0.2;
+var ROTATION_SPEED = 150;
+function RotateLeftRight(param /* 0 - right, 1 - left */) {
+    let go = ROTATION_POSITION;
+    let back = - ROTATION_POSITION;
+    let pos  = param < 1 ? go : back;
+    let easing = {val : pos};
+    let tween = new TWEEN.Tween(easing) 
+        .to({val: 0}, ROTATION_SPEED) 
+        .easing(TWEEN.Easing.Quadratic.InOut) 
+        .onUpdate(function() { 
+            viewer.OrbitControls.rotateLeft(easing.val)
+    }).start();
+}
+function rotateUpDown(param /* 0 - down, 1- up */) {
+    let go = ROTATION_POSITION;
+    let back = -ROTATION_POSITION;
+    let pos  = param < 1 ? go : back;
+    let easing = {val : pos};
+    let tween = new TWEEN.Tween(easing) 
+        .to({val: 0}, ROTATION_SPEED) 
+        .easing(TWEEN.Easing.Quadratic.InOut) 
+        .onUpdate(function() { 
+            viewer.OrbitControls.rotateUp(easing.val)
+    }).start();
+}
