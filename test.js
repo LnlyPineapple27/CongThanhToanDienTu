@@ -267,6 +267,9 @@ viewer.appendControlItem(controlSensor);
 viewer.appendControlItem(controlRotate);
 viewer.appendControlItem(controlMap);
 viewer.appendControlItem(controlExtras);
+function is_touch_device() {
+  return 'ontouchstart' in window;
+}
 
 var ROTATION_POSITION = 0.2;
 var ROTATION_SPEED = 150;
