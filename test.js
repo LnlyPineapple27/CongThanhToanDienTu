@@ -72,45 +72,6 @@ function onLeave(event) {
 }
     
 const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
-panorama.addEventListener('progress', onProgress);
-panorama.addEventListener('leave', onLeave);
-panorama.addEventListener('enter', onEnter);
-panorama.addEventListener('load', function() {
-  onLoad();
-  viewer.tweenControlCenter(new THREE.Vector3(-4964.25, 504.41, -134.84), 0); // Initialize view
-  $('#panolens-viewer').after('<div id="secondary"><span class="item zoom-out"><i class="fa fa-search-minus" aria-hidden="true"></i></span><span class="item zoom-in"><i class="fa fa-search-plus" aria-hidden="true"></i></span><span class="item arrow-right"><i class="fa fa-angle-right" aria-hidden="true"></i></span><span class="item arrow-up"><i class="fa fa-angle-up" aria-hidden="true"></i></span><span class="item arrow-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span><span class="item arrow-left"><i class="fa fa-angle-left" aria-hidden="true"></i></span></div>');
-  $('#secondary .zoom-in').on('click touchstart', function() {
-    var currentZoom = viewer.camera.fov;
-    var newZoom = currentZoom - 10;
-    if(newZoom < 30) newZoom = 30;
-    viewer.setCameraFov(newZoom);
-  });
-  $('#secondary .zoom-out').on('click touchstart', function() {
-    var currentZoom = viewer.camera.fov;
-    var newZoom = currentZoom + 10;
-    if(newZoom > 110) newZoom = 110;
-    viewer.setCameraFov(newZoom);
-  });
-  $('#secondary .arrow-left').on('click touchstart', function() {
-  	RotateLeftRight(1);
-  });
-  $('#secondary .arrow-right').on('click touchstart', function() {
-    RotateLeftRight(0);
-  });
-  $('#secondary .arrow-up').on('click touchstart', function() {
-    rotateUpDown(1);
-  });
-  $('#secondary .arrow-down').on('click touchstart', function() {
-  	rotateUpDown(0);
-    viewer.OrbitControls.rotateUp(0.1);
-  });
-  setTimeout(function() {
-    $('#intro-msg h1, #intro-msg h2').remove();
-    $('#intro-msg img').css('max-width', '50px').css('max-height', '50px').css('margin', '0').css('cursor', 'pointer');
-    $('#intro-msg').css('width', '50px').css('padding', '0').css('top', '10px').css('left', '10px').css('text-align', 'left').css('transform', 'none').fadeIn();
-    }, 1000);
-});
-
 
 var locationList =[
   new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg'),  // 0
@@ -125,7 +86,15 @@ var infospotList=[
   new PANOLENS.Infospot(350, `img/icon/up_arrow.png?v=${Date.now()+Math.floor(Math.random()*100000)}`),  //3
   new PANOLENS.Infospot(350, `img/icon/up_arrow.png?v=${Date.now()+Math.floor(Math.random()*100000)}`), //4
   new PANOLENS.Infospot(350, `img/icon/right_arrow.png?v=${Date.now()+Math.floor(Math.random()*100000)}`)]
-
+for (var i = 0; i<locationList;i++){
+  locationList[i].addEventListener('progress', onProgress);
+  locationList[i].addEventListener('enter', onEnter);
+  locationList[i].addEventListener('leave', onLeave);
+  locationList[i].addEventListener('load', function() {
+    onLoad();
+    viewer.tweenControlCenter(new THREE.Vector3(-4986.06, 0.27, -265.77), 0);
+  });
+}
 // infospot1.element = container;
 // console.log(infospot1.element)
 // pos1_vector = new THREE.Vector3(2975.80, 562.94, 3969.47); 
@@ -224,20 +193,53 @@ function onFocus () {
     this.focus( parameters.duration, TWEEN.Easing[ parameters.curve ][ parameters.easing ] );
 
   }
+  viewer.tweenControlCenter(new THREE.Vector3(-4964.25, 504.41, -134.84), 0); // Initialize view
+  $('#panolens-viewer').after('<div id="secondary"><span class="item zoom-out"><i class="fa fa-search-minus" aria-hidden="true"></i></span><span class="item zoom-in"><i class="fa fa-search-plus" aria-hidden="true"></i></span><span class="item arrow-right"><i class="fa fa-angle-right" aria-hidden="true"></i></span><span class="item arrow-up"><i class="fa fa-angle-up" aria-hidden="true"></i></span><span class="item arrow-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span><span class="item arrow-left"><i class="fa fa-angle-left" aria-hidden="true"></i></span></div>');
+  $('#secondary .zoom-in').on('click touchstart', function() {
+    var currentZoom = viewer.camera.fov;
+    var newZoom = currentZoom - 10;
+    if(newZoom < 30) newZoom = 30;
+    viewer.setCameraFov(newZoom);
+  });
+  $('#secondary .zoom-out').on('click touchstart', function() {
+    var currentZoom = viewer.camera.fov;
+    var newZoom = currentZoom + 10;
+    if(newZoom > 110) newZoom = 110;
+    viewer.setCameraFov(newZoom);
+  });
+  $('#secondary .arrow-left').on('click touchstart', function() {
+  	RotateLeftRight(1);
+  });
+  $('#secondary .arrow-right').on('click touchstart', function() {
+    RotateLeftRight(0);
+  });
+  $('#secondary .arrow-up').on('click touchstart', function() {
+    rotateUpDown(1);
+  });
+  $('#secondary .arrow-down').on('click touchstart', function() {
+  	rotateUpDown(0);
+    viewer.OrbitControls.rotateUp(0.1);
+  });
+  setTimeout(function() {
+    $('#intro-msg h1, #intro-msg h2').remove();
+    $('#intro-msg img').css('max-width', '50px').css('max-height', '50px').css('margin', '0').css('cursor', 'pointer');
+    $('#intro-msg').css('width', '50px').css('padding', '0').css('top', '10px').css('left', '10px').css('text-align', 'left').css('transform', 'none').fadeIn();
+    }, 1000);
+
 // var controlIndex = PANOLENS.Controls.ORBIT;
-var controlSensor = {
-  style: {
-    backgroundImage: 'url(img/icon/sensor.png)'
-  },
-  onTap: function() {
-    controlIndex = controlIndex >= 1 ? 0 : controlIndex + 1;
-    switch (controlIndex) {
-      case 0: viewer.enableControl(PANOLENS.Controls.ORBIT); break;
-      case 1: viewer.enableControl(PANOLENS.Controls.DEVICEORIENTATION); break;
-      default: break;
-    }
-  }
-};
+// var controlSensor = {
+//   style: {
+//     backgroundImage: 'url(img/icon/sensor.png)'
+//   },
+//   onTap: function() {
+//     controlIndex = controlIndex >= 1 ? 0 : controlIndex + 1;
+//     switch (controlIndex) {
+//       case 0: viewer.enableControl(PANOLENS.Controls.ORBIT); break;
+//       case 1: viewer.enableControl(PANOLENS.Controls.DEVICEORIENTATION); break;
+//       default: break;
+//     }
+//   }
+// };
 var controlRotate = {
   style: {
     backgroundImage: 'url(img/icon/rotate.png)'
@@ -263,7 +265,7 @@ var controlExtras = {
     $("#secondary").toggle(400);
   }
 };
-viewer.appendControlItem(controlSensor);
+// viewer.appendControlItem(controlSensor);
 viewer.appendControlItem(controlRotate);
 viewer.appendControlItem(controlMap);
 viewer.appendControlItem(controlExtras);
