@@ -1,0 +1,13 @@
+node_modules
+bower_components
+.idea/*
+./**.DS_Store
+coverage/
+.nyc_output
+.vscode/
+krpano-1.20.11/*
+panolens.js-0.12.1/*
+three.js-master/*
+krpano-1.20.11.zip
+panolens.js-0.12.1.zip
+three.js-master.zip

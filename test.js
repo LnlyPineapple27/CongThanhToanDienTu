@@ -10,15 +10,33 @@ parameters = {
     iterative: false
   };
 const panorama = new PANOLENS.ImagePanorama('img3D/congtruong.jpg');
-panolensViewer = document.querySelector('#panolens-viewer');
-pos1= new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg'); 
 
-infospot = new PANOLENS.Infospot(350,PANOLENS.DataImage.Info);
-// pos1_vector = new THREE.Vector3(3785.53, 669.68, -5000.00);
-infospot.position.set(3785.53, 669.68, -5000.00);
-infospot.addHoverText('Sanh I');
-infospot.addEventListener('click',onFocus);
-panorama.add(infospot);
+panolensViewer = document.querySelector('#panolens-viewer');
+panel = document.querySelector('#panel')
+
+let container = document.querySelector('#testContainer')
+
+pos1= new PANOLENS.ImagePanorama('img3D/sanhI_1.jpg');  // Add hinh
+infospot1 = new PANOLENS.Infospot(350, 'img/icon/point.png'); // size, PANOLEns...
+// infospot1.element = container;
+// console.log(infospot1.element)
+pos1_vector = new THREE.Vector3(2975.80, 562.94, 3969.47); 
+
+// new THREE.CSS3DRenderer()
+infospot1.position.set(2975.80, 562.94, 3969.47);
+infospot1.addHoverElement(panel);
+infospot1.addEventListener('click', function(){
+  viewer.setPanorama(pos1);}
+);//onFocus);
+
+
+panorama.add(infospot1);
+// 3D OBJECT __________ TESTING
+// var object = new THREE.CSS3DObject(container);
+// object.position.set(-208.92, 653.68, -4942.70);
+
+// panorama.add(object);
+
 viewer = new PANOLENS.Viewer({ 
     container: panolensViewer,        // A DOM Element container
         // controlBar: true,             // Vsibility of bottom control bar
@@ -35,7 +53,8 @@ viewer = new PANOLENS.Viewer({
         // indicatorSize: 30,            // Size of View Indicator
         output: 'console'            // Whether and where to output infospot position. Could be 'console' or 'overlay'
  });
-viewer.add(panorama);
+viewer.add(panorama, pos1);
+//panorama.link(pos1, pos1_vector );
 
 function onFocus () {
 
