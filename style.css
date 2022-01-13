@@ -29,5 +29,31 @@ html, body {
 .test {
   background: red;
 }
+.panelInfo {
+  max-width: 300px;
+  max-height: 300px;
+  min-width: 200px;
+  min-height: 250px;
+  background: #fff;
+  color: #000;
+  border-radius: 3px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.panelInfo > iframe {
+  border: none;
+  width:100%;
+}
+.panelInfo > img {
+  border: none;
+  width:100%;
+}
+.title {
+  font-size: 1.2em;
+  text-align: center;
+  padding: 2.5px;
+}
 
- 
+.text {
+  padding: 0 15px 15px 15px;
+}
